@@ -24,8 +24,8 @@ const translateCommentElement = (commentElem) => {
   commentElem.textContent = "translate me bro";
 };
 
+// reference: https://stackoverflow.com/questions/30578673/is-it-possible-to-make-queryselectorall-live-like-getelementsbytagname
 function querySelectorAllLive(element, selector) {
-
   // Initialize results with current nodes.
   const result = Array.prototype.slice.call(element.querySelectorAll(selector));
 
@@ -74,10 +74,22 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
   if (request.todo == "parseComments") {
     const elms = querySelectorAllLive(document, "[id='content-text']");
-    elms.forEach((elem) => {
-      translateCommentElement(elem);
-    });
   }
 });
+
+setInterval(() => {
+  const elms = querySelectorAllLive(document, "[id='content-text']");
+  elms.forEach((elem) => {
+    if (elem.getAttribute('isChanged') !== 'yes') {
+      const translateButton = document.createElement("button");
+      translateButton.innerHTML = "Translate";
+      translateButton.addEventListener ("click", function() {
+        elem.textContent = 'Translated';
+      });
+      elem.appendChild(translateButton);
+      elem.setAttribute('isChanged', 'yes');
+    }
+  });
+}, 1000);
 
 chrome.run
