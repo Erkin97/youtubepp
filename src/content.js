@@ -1,5 +1,5 @@
 chrome.runtime.sendMessage({
-  todo: "showPageAction"
+  todo: "showPageAction",
 });
 
 function get_video_id(v_url) {
@@ -10,7 +10,7 @@ function get_video_id(v_url) {
   if (i == -1) return "-1";
   let ans = "";
   for (i = i + 2; i < v_url.length; i++) {
-    if (v_url[i] == '?' || v_url[i] == '/' || v_url[i] == '&') {
+    if (v_url[i] == "?" || v_url[i] == "/" || v_url[i] == "&") {
       return ans;
     }
     ans += v_url[i];
@@ -32,7 +32,7 @@ function querySelectorAllLive(element, selector) {
   // Create observer instance.
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-      [].forEach.call(mutation.addedNodes, function(node) {
+      [].forEach.call(mutation.addedNodes, function (node) {
         if (node.nodeType === Node.ELEMENT_NODE && node.matches(selector)) {
           result.push(node);
         }
@@ -56,7 +56,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     myNode = myNode.parentNode;
     const player_height = myNode.clientHeight;
     const player_width = myNode.clientWidth;
-    new_code = '<iframe class="unblocked" width="' + player_width + '" height="' + player_height + '" src="https://www.youtube.com/embed/' + get_video_id(page_href) + '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+    new_code =
+      '<iframe class="unblocked" width="' +
+      player_width +
+      '" height="' +
+      player_height +
+      '" src="https://www.youtube.com/embed/' +
+      get_video_id(page_href) +
+      '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
     const new_player = this.document.createElement("span");
     new_player.innerHTML = new_code;
     while (myNode.firstChild) {
@@ -67,8 +74,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     myNode.id = "new_player";
   }
   if (request.todo == "reloadPage") {
-    if (document.getElementById("roflancheckme").innerHTML != "" &&
-      document.getElementById("roflancheckme").innerHTML != undefined) {
+    if (
+      document.getElementById("roflancheckme").innerHTML != "" &&
+      document.getElementById("roflancheckme").innerHTML != undefined
+    ) {
       document.location.reload(true);
     }
   }
@@ -77,19 +86,35 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
 });
 
+let commentsSize = 0;
+
 setInterval(() => {
   const elms = querySelectorAllLive(document, "[id='content-text']");
+  if (elms.length === commentsSize) return;
+  commentsSize = elms.length;
   elms.forEach((elem) => {
-    if (elem.getAttribute('isChanged') !== 'yes') {
+    if (elem.getAttribute("isChanged") !== "yes") {
       const translateButton = document.createElement("button");
+      const text = elem.textContent;
       translateButton.innerHTML = "Translate";
-      translateButton.addEventListener ("click", function() {
-        elem.textContent = 'Translated';
+      translateButton.addEventListener("click", () => {
+        fetch("https://ccf1bede.ngrok.io/", {  // ngrok tunneling to my api
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ text }),
+        })
+          .then((response) => response.json())
+          .then(({ message }) => {
+            console.log(message);
+            elem.textContent = message;
+          });
       });
       elem.appendChild(translateButton);
-      elem.setAttribute('isChanged', 'yes');
+      elem.setAttribute("isChanged", "yes");
     }
   });
 }, 1000);
 
-chrome.run
+chrome.run;
