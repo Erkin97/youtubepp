@@ -10,6 +10,7 @@ Youtube already supports search by voice and auto subtitles. However comments tr
 
 - Decode youtube comments and inject custom button which calls translate api
 - Translate api is served by custom express.js server. Look `/api` for code. 
+- Demo (
 
 ## Command recognition (Not implemented)
 
