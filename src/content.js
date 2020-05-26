@@ -2,28 +2,6 @@ chrome.runtime.sendMessage({
   todo: "showPageAction",
 });
 
-function get_video_id(v_url) {
-  if (v_url.indexOf("watch") == -1) {
-    return "-1";
-  }
-  let i = v_url.indexOf("v=");
-  if (i == -1) return "-1";
-  let ans = "";
-  for (i = i + 2; i < v_url.length; i++) {
-    if (v_url[i] == "?" || v_url[i] == "/" || v_url[i] == "&") {
-      return ans;
-    }
-    ans += v_url[i];
-  }
-  return ans;
-}
-
-const translateCommentElement = (commentElem) => {
-  console.log(commentElem.textContent);
-  // translate
-  commentElem.textContent = "translate me bro";
-};
-
 // reference: https://stackoverflow.com/questions/30578673/is-it-possible-to-make-queryselectorall-live-like-getelementsbytagname
 function querySelectorAllLive(element, selector) {
   // Initialize results with current nodes.
@@ -46,59 +24,21 @@ function querySelectorAllLive(element, selector) {
   return result;
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.todo == "unblockVideo") {
-    const page_href = window.location.href;
-    const myNode = this.document.getElementById("player-container-outer");
-    if (myNode == undefined || myNode.innerHTML == "") {
-      const myNode = this.document.getElementById("player-container");
-    }
-    myNode = myNode.parentNode;
-    const player_height = myNode.clientHeight;
-    const player_width = myNode.clientWidth;
-    new_code =
-      '<iframe class="unblocked" width="' +
-      player_width +
-      '" height="' +
-      player_height +
-      '" src="https://www.youtube.com/embed/' +
-      get_video_id(page_href) +
-      '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
-    const new_player = this.document.createElement("span");
-    new_player.innerHTML = new_code;
-    while (myNode.firstChild) {
-      myNode.removeChild(myNode.firstChild);
-    }
-    new_player.id = "roflancheckme";
-    myNode.appendChild(new_player);
-    myNode.id = "new_player";
-  }
-  if (request.todo == "reloadPage") {
-    if (
-      document.getElementById("roflancheckme").innerHTML != "" &&
-      document.getElementById("roflancheckme").innerHTML != undefined
-    ) {
-      document.location.reload(true);
-    }
-  }
-  if (request.todo == "parseComments") {
-    const elms = querySelectorAllLive(document, "[id='content-text']");
-  }
-});
-
+// Update comments when new comes
 let commentsSize = 0;
-
 setInterval(() => {
   const elms = querySelectorAllLive(document, "[id='content-text']");
   if (elms.length === commentsSize) return;
   commentsSize = elms.length;
+
   elms.forEach((elem) => {
     if (elem.getAttribute("isChanged") !== "yes") {
       const translateButton = document.createElement("button");
       const text = elem.textContent;
       translateButton.innerHTML = "Translate";
       translateButton.addEventListener("click", () => {
-        fetch("https://ccf1bede.ngrok.io/", {  // ngrok tunneling to my api
+        fetch("https://48911590.ngrok.io/translate", {
+          // ngrok tunneling to my api
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -107,8 +47,10 @@ setInterval(() => {
         })
           .then((response) => response.json())
           .then(({ message }) => {
-            console.log(message);
             elem.textContent = message;
+          })
+          .catch((error) => {
+            elem.textContent = error;
           });
       });
       elem.appendChild(translateButton);
