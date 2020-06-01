@@ -8,22 +8,22 @@
     "default_popup": "/src/popup.html",
     "default_title": "Options"
   },
-  "icons": { 
+  "icons": {
     "16": "/public/icon16.png",
     "48": "/public/icon128.png",
-    "128": "/public/icon128.png" 
+    "128": "/public/icon128.png"
   },
   "background": {
     "scripts": ["/src/eventPage.js"],
     "persistent": false
   },
-  "content_scripts":[
+  "content_scripts": [
     {
-      "matches": [ "*://*.youtube.com/*" ],
+      "matches": ["*://*.youtube.com/*"],
       "js": ["/src/content.js"],
-      "css" : ["/src/style.css"],
+      "css": ["/src/style.css"],
       "run_at": "document_idle"
     }
   ],
-  "permissions":["*://*.youtube.com/*"]
+  "permissions": ["*://*.youtube.com/*", "tabs"]
 }

@@ -26,6 +26,7 @@ function querySelectorAllLive(element, selector) {
 
 // Update comments when new comes
 let commentsSize = 0;
+let needToReload = false;
 setInterval(() => {
   const elms = querySelectorAllLive(document, "[id='content-text']");
   if (elms.length === commentsSize) return;
@@ -33,11 +34,14 @@ setInterval(() => {
 
   elms.forEach((elem) => {
     if (elem.getAttribute("isChanged") !== "yes") {
-      const translateButton = document.createElement("button");
+      const translateButton = document.createElement("span");
       const text = elem.textContent;
-      translateButton.innerHTML = "Translate";
+      translateButton.innerHTML = " 🌎 TRANSLATE 🌏 ";
+      translateButton.style.cursor = "pointer";
+      translateButton.style.color = "blue";
+      needToReload = true;
       translateButton.addEventListener("click", () => {
-        fetch("https://48911590.ngrok.io/translate", {
+        fetch("https://491c978b1805.ngrok.io/translate", {
           // ngrok tunneling to my api
           method: "POST",
           headers: {
@@ -50,13 +54,20 @@ setInterval(() => {
             elem.textContent = message;
           })
           .catch((error) => {
-            elem.textContent = error;
+            console.log(error);
           });
       });
+      translateButton.style.display = 'none';
+      elem.parentNode.onmouseover = () => {
+        translateButton.style.display = 'inline';
+      };
+      elem.parentNode.onmouseleave = () => {
+        translateButton.style.display = 'none';
+      }
       elem.appendChild(translateButton);
       elem.setAttribute("isChanged", "yes");
     }
   });
-}, 1000);
+}, 2000);
 
 chrome.run;
