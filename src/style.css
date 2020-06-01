@@ -1,4 +1,69 @@
-iframe.unblocked {
-  resize: both;
-  overflow: auto;
+#translator-wrapper {
+  display:block;
+  width:90%;
+  max-width:300px;  
+  border:none;  
+  background-color:#fff;
+  color:#444;
+  overflow:hidden;
+  position:relative;
+  height:40px;
+  line-height:40px;
+  border:1px solid #e0e0e0;
+}
+#translator-wrapper select {
+  border:none;
+  background:transparent;
+  font-family:'Verdana',Arial,Sans-Serif;
+  font-size:12px;
+  width:100%;
+  color:#444;
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  box-sizing:border-box;
+  -webkit-appearance:none;
+  cursor:text;
+  padding:5px 10px;
+}
+#translator-wrapper a,
+#translator-wrapper a:hover {
+  display:block;
+  background-color:#ff4400;
+  border:none;
+  color:#fff;
+  margin:0 0;
+  text-decoration:none;
+  position:absolute;
+  top:0;
+  right:0;
+  bottom:0;
+  cursor:pointer;
+  width:14%; 
+  transition:all 0.3s ease;  
+}
+#translator-wrapper a:before {
+  content:"";
+  display:block;
+  width:0;
+  height:0;
+  border:6px solid transparent;
+  border-left-color:white;
+  position:absolute;
+  top:50%;
+  left:45%;
+  margin-top:-5px;
+}
+#translator-wrapper a:hover {opacity:0.9;}
+#translator-wrapper a:active {opacity:0.9;}
+#translator-wrapper select:focus,
+#translator-wrapper a:focus,
+#translator-wrapper select:active,
+#translator-wrapper a:active {
+  border:none;
+  outline:none;
+  cursor:pointer;
+}
+option {
+  background:#444;
+  color:#e0e0e0;
 }

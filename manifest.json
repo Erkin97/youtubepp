@@ -25,5 +25,5 @@
       "run_at": "document_idle"
     }
   ],
-  "permissions": ["*://*.youtube.com/*", "tabs"]
+  "permissions": ["*://*.youtube.com/*", "tabs", "storage"]
 }
