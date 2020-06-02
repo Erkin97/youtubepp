@@ -41,29 +41,32 @@ setInterval(() => {
       translateButton.style.color = "blue";
       needToReload = true;
       translateButton.addEventListener("click", () => {
-        fetch("https://491c978b1805.ngrok.io/translate", {
-          // ngrok tunneling to my api
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ text }),
-        })
-          .then((response) => response.json())
-          .then(({ message }) => {
-            elem.textContent = message;
+        chrome.storage.local.get(["destination"], function (result) {
+          const dest = result.destination ? result.destination : "en";
+          fetch("https://299e8b210152.ngrok.io/translate", {
+            // ngrok tunneling to my api
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ text, dest }),
           })
-          .catch((error) => {
-            console.log(error);
-          });
+            .then((response) => response.json())
+            .then(({ message }) => {
+              elem.textContent = message;
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        });
       });
-      translateButton.style.display = 'none';
+      translateButton.style.display = "none";
       elem.parentNode.onmouseover = () => {
-        translateButton.style.display = 'inline';
+        translateButton.style.display = "inline";
       };
       elem.parentNode.onmouseleave = () => {
-        translateButton.style.display = 'none';
-      }
+        translateButton.style.display = "none";
+      };
       elem.appendChild(translateButton);
       elem.setAttribute("isChanged", "yes");
     }

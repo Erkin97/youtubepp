@@ -5,7 +5,7 @@ const emojiStrip = require('emoji-strip');
 const { PythonShell } = require("python-shell");
 
 router.post("/", (req, res) => {
-  const { text } = req.body;
+  const { text, dest } = req.body;
   const normText = emojiStrip(text);
 
   PythonShell.run(
@@ -13,7 +13,7 @@ router.post("/", (req, res) => {
     {
       mode: "text",
       pythonOptions: ["-u"],
-      args: [normText],
+      args: [normText, dest],
     }, (err, results) => {
       if (err) throw err;
       res.json({ message: results });
