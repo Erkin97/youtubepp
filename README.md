@@ -4,7 +4,7 @@ A chrome extension to extend YouTube functionality
 # Problem
 
 Add modern text and speach recognition features to the YouTube functionality.
-Youtube already supports search by voice and auto subtitles. However comments translation (INSTAGRAM comments) and video voice control are not supported.
+Youtube already supports search by voice and auto subtitles. However comments translation (INSTAGRAM comments)
 
 ## Text recognition by Comments Translation
 
