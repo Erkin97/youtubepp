@@ -38,12 +38,12 @@ setInterval(() => {
       const text = elem.textContent;
       translateButton.innerHTML = " 🌎 TRANSLATE 🌏 ";
       translateButton.style.cursor = "pointer";
-      translateButton.style.color = "blue";
+      translateButton.style.color = "#113d4f";
       needToReload = true;
       translateButton.addEventListener("click", () => {
         chrome.storage.local.get(["destination"], function (result) {
           const dest = result.destination ? result.destination : "en";
-          fetch("https://299e8b210152.ngrok.io/translate", {
+          fetch("", {
             // ngrok tunneling to my api
             method: "POST",
             headers: {
@@ -72,5 +72,14 @@ setInterval(() => {
     }
   });
 }, 2000);
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.todo == "reloadPage") {
+    if (needToReload) {
+      needToReload = false;
+      document.location.reload(true);
+    }
+  }
+});
 
 chrome.run;
