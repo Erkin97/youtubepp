@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Youtube++",
-  "description": "Make YouTube Greater!",
+  "name": "YouTubeCommentsTranslator",
+  "description": "YouTube Comments Translator",
   "version": "0.1",
   "author": "erkin97",
   "page_action": {
